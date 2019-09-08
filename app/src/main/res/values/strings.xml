@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">New Wonders</string>
+    <string name="l">New Wonders List</string>
+    <string name="d">New Wonders Detail</string>
+
+    <string name="w">Wonderful Places</string>
+    <string name="location">Title</string>
+    <string name="description">Description</string>
+
+</resources>
