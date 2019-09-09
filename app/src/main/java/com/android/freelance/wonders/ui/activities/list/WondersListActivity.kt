@@ -13,6 +13,7 @@ import com.android.freelance.wonders.R
 import com.android.freelance.wonders.data.db.entity.Wonders
 import com.android.freelance.wonders.ui.activities.detail.WondersDetailActivity
 import com.android.freelance.wonders.ui.adapter.WondersAdapter
+import com.android.freelance.wonders.ui.util.Coroutines
 import com.android.freelance.wonders.ui.viewmodel.WondersViewModel
 import com.android.freelance.wonders.ui.viewmodel.WondersViewModelFactory
 import kotlinx.android.synthetic.main.activity_wonderslist.*
@@ -51,12 +52,13 @@ class WondersListActivity : AppCompatActivity(), WondersAdapter.ListItemClickLis
         viewModel.callWebService
     }
 
-    private fun offlineData() {
+    private fun offlineData() = Coroutines.main {
         Log.i(LOG_TAG, "TEST: offlineData() is called...")
 
-        pbLoadingIndicator.visibility = View.GONE
-        viewModel.getAllWonders.observe(this, Observer { wonders ->
-            wonders?.let { refreshUIWith(wonders) }
+        viewModel.getAllWonders.await().observe(this, Observer {
+            pbLoadingIndicator.visibility = View.GONE
+
+            refreshUIWith(it)
         })
     }
 
@@ -65,11 +67,10 @@ class WondersListActivity : AppCompatActivity(), WondersAdapter.ListItemClickLis
 
         // try to touch View of UI thread
         this@WondersListActivity.runOnUiThread(java.lang.Runnable {
-            val wondersList = rvWondersList
             val layoutManager = LinearLayoutManager(this)
-            wondersList.layoutManager = layoutManager
-            wondersList.hasFixedSize()
-            wondersList.addItemDecoration(
+            rvWondersList.layoutManager = layoutManager
+            rvWondersList.hasFixedSize()
+            rvWondersList.addItemDecoration(
                 DividerItemDecoration(
                     this,
                     DividerItemDecoration.VERTICAL
@@ -77,15 +78,15 @@ class WondersListActivity : AppCompatActivity(), WondersAdapter.ListItemClickLis
             )
             val adapter =
                 WondersAdapter(this@WondersListActivity, applicationContext, wonders)
-            wondersList.adapter = adapter
+            rvWondersList.adapter = adapter
         })
     }
 
     override fun onListItemClick(position: Int, wondersEntity: List<Wonders>) {
         Log.i(LOG_TAG, "TEST: onListItemClick() called...")
 
-        /*val intent = Intent(applicationContext, WondersDetailActivity::class.java)*/
         val intent = Intent(applicationContext, WondersDetailActivity::class.java)
+       /* val intent = Intent(applicationContext, WondersViewModel::class.java)*/
         intent.putExtra("image", wondersEntity.get(position).image)
         intent.putExtra("title", wondersEntity.get(position).location)
         intent.putExtra("desp", wondersEntity.get(position).description)

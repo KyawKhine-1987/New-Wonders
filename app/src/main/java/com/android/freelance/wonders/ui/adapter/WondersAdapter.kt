@@ -17,7 +17,6 @@ class WondersAdapter(val mListItemClickListener: ListItemClickListener, private 
 
     private val LOG_TAG = WondersAdapter::class.java.name
 
-
     interface ListItemClickListener {
         fun onListItemClick(clickItemIndex: Int, wondersEntity: List<Wonders>)
     }

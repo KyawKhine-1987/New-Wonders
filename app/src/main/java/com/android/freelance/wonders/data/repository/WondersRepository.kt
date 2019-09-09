@@ -9,8 +9,13 @@ import androidx.lifecycle.LiveData
 import com.android.freelance.wonders.data.db.WondersDatabase
 import com.android.freelance.wonders.data.db.entity.Wonders
 import com.android.freelance.wonders.data.network.ApiWonders
+import com.android.freelance.wonders.ui.util.Coroutines
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class WondersRepository(
     api: ApiWonders,
@@ -25,21 +30,27 @@ class WondersRepository(
         .subscribe({
 
             /*Thread(Runnable {*/
-                val wondersListFromNetwork = it.wonders
+            val wondersListFromNetwork = it.wonders
 
-                val wondersListEntity = ArrayList<Wonders>()
-                for (wondersFromNetwork in wondersListFromNetwork) {
+            val wondersListEntity = ArrayList<Wonders>()
+            for (wondersFromNetwork in wondersListFromNetwork) {
 
-                    val wonders = Wonders()
-                    wonders.location = wondersFromNetwork.location
-                    wonders.image = wondersFromNetwork.image
-                    wonders.description = wondersFromNetwork.description
-                    wonders.lat = wondersFromNetwork.lat
-                    wonders.longitude = wondersFromNetwork.longitude
-                    wondersListEntity.add(wonders)
-                }
-                this.deleteAllWonders()
-                this.saveWonders(wondersListEntity)
+                val wonders = Wonders()
+                wonders.location = wondersFromNetwork.location
+                wonders.image = wondersFromNetwork.image
+                wonders.description = wondersFromNetwork.description
+                wonders.lat = wondersFromNetwork.lat
+                wonders.longitude = wondersFromNetwork.longitude
+                wondersListEntity.add(wonders)
+            }
+
+            Coroutines.io {
+                db.wondersDao().deleteAllWonders(wondersListEntity)
+                db.wondersDao().insert(wondersListEntity)
+            }
+            /*this.deleteAllWonders()
+            this.saveWonders(wondersListEntity)*/
+
             /*}).start()*/
         }, {
             Toast.makeText(
@@ -49,9 +60,14 @@ class WondersRepository(
             ).show()
         })
 
-    private fun saveWonders(wonders: List<Wonders>) = db.wondersDao().insert(wonders)//suspend
+    suspend fun getAllWonders(): LiveData<List<Wonders>> {
+        return withContext(Dispatchers.IO) {
+            db.wondersDao().fetchAllWonders()
+        }
+    }
 
-    fun getAllWonders(): LiveData<List<Wonders>> = db.wondersDao().fetchAllWonders()
+    /*private suspend fun saveWonders(wonders: List<Wonders>) =
+        db.wondersDao().insert(wonders)
 
-    private fun deleteAllWonders() = db.wondersDao().deleteAllWonders()
+    private suspend fun deleteAllWonders() = db.wondersDao().deleteAllWonders()*/
 }

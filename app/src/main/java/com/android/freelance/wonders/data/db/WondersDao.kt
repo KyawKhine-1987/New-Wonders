@@ -8,11 +8,13 @@ import com.android.freelance.wonders.data.db.entity.Wonders
 interface WondersDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(wonders: List<Wonders>)//suspend
+    suspend fun insert(wonders: List<Wonders>)//suspend
 
-    @Query("select * from Wonders nolock order by id asc;")
+    @Query("select * from wonders nolock order by id asc;")
     fun fetchAllWonders(): LiveData<List<Wonders>>
 
-    @Query("delete from Wonders;")
-    fun deleteAllWonders()
+    @Delete
+    suspend fun deleteAllWonders(wonders: List<Wonders>)
+    /*@Query("delete from wonders;")
+    suspend fun deleteAllWonders()*/
 }

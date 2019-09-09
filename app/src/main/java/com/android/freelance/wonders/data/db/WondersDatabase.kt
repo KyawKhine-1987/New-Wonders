@@ -25,6 +25,7 @@ abstract class WondersDatabase : RoomDatabase() {
             context.applicationContext,
             WondersDatabase::class.java,
             "Wonders.db"
-        ).allowMainThreadQueries().build()
+        ).build()
+       /* ).allowMainThreadQueries().build()*/
     }
 }

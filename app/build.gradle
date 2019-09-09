@@ -55,24 +55,24 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$glide_version"
     kapt "com.github.bumptech.glide:compiler:$glide_version"
 
-    // Room
-    def room_version = '2.2.0-alpha02'
-    implementation "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
-    //implementation "androidx.room:room-ktx:$room_version"//Add some suspense feature in interface of FilmsDao to room db.
-    //implementation "androidx.room:room-coroutines:2.1.0-alpha04"//Add some suspense to room db
-
     // ViewModel
-    def lifecycle_version = '2.2.0-alpha03'
+    def lifecycle_version = '2.2.0-alpha04'
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     //solved this error "Unresolved reference: ViewModelProviders"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
 
+    // Room
+    def room_version = '2.2.0-rc01'
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"//Add some suspense feature in interface of FilmsDao to room db.
+    //implementation "androidx.room:room-coroutines:2.1.0-alpha04"//Add some suspense to room db
+
     // Kotlin Android Coroutines
-    def kotlinxCoroutines_Version = '1.0.0-RC1'
+    def kotlinxCoroutines_Version = '1.1.1'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutines_Version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutines_Version"
+    //implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutines_Version"
 
     //Kodein Dependency Injection
     def kodein_version = '6.2.1'

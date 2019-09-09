@@ -5,16 +5,28 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProviders
 import com.android.freelance.wonders.R
+import com.android.freelance.wonders.ui.viewmodel.WondersViewModel
+import com.android.freelance.wonders.ui.viewmodel.WondersViewModelFactory
 import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.activity_wondersdetail.*
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.kodein
+import org.kodein.di.generic.instance
 
-class WondersDetailActivity : AppCompatActivity() {
+class WondersDetailActivity : AppCompatActivity() , KodeinAware {
 
     private val LOG_TAG = WondersDetailActivity::class.java.name
+    override val kodein by kodein()
+    private val factory: WondersViewModelFactory by instance()
+    private lateinit var viewModel: WondersViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_wondersdetail)
+
+        viewModel = ViewModelProviders.of(this, factory).get(WondersViewModel::class.java)
 
         relevantDataBindingInUI()
     }
@@ -31,7 +43,8 @@ class WondersDetailActivity : AppCompatActivity() {
 
         wondersDetailTitle.text = intent.getStringExtra("title")
         wondersDetailDesp.text = intent.getStringExtra("desp")
-        /* Glide.with(this).load(viewModel.detailImage).into(ivDetailWonders)
+
+         /*Glide.with(this).load(viewModel.detailImage).into(ivDetailWonders)
          tvDetailLocation.text = viewModel.detailLocation
          tvDetailDescription.text = viewModel.detailDescription*/
     }
