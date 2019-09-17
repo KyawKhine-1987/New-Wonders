@@ -29,7 +29,6 @@ class WondersRepository(
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe({
 
-            /*Thread(Runnable {*/
             val wondersListFromNetwork = it.wonders
 
             val wondersListEntity = ArrayList<Wonders>()
@@ -45,17 +44,15 @@ class WondersRepository(
             }
 
             Coroutines.io {
-                db.wondersDao().deleteAllWonders(wondersListEntity)
+                /*db.wondersDao().deleteAllWonders(wondersListEntity)*/
+                db.wondersDao().deleteAllWonders()
                 db.wondersDao().insert(wondersListEntity)
             }
-            /*this.deleteAllWonders()
-            this.saveWonders(wondersListEntity)*/
-
-            /*}).start()*/
         }, {
             Toast.makeText(
                 context,
-                "No Internet Connection!\nThis is offline data which is taken to show you from the local storage.\nAlso " + it.message,
+                /*"No Internet Connection!\nThis is offline data which is taken to show you from the local storage.\nAlso " + it.message,*/
+                it.message,
                 Toast.LENGTH_LONG
             ).show()
         })
@@ -65,9 +62,4 @@ class WondersRepository(
             db.wondersDao().fetchAllWonders()
         }
     }
-
-    /*private suspend fun saveWonders(wonders: List<Wonders>) =
-        db.wondersDao().insert(wonders)
-
-    private suspend fun deleteAllWonders() = db.wondersDao().deleteAllWonders()*/
 }
